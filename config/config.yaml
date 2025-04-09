@@ -1,0 +1,13 @@
+/**:
+  ros__parameters:
+    # 消息发布时间间隔，单位ms
+    publish_rate: 3.0
+
+    # yaw范围
+    yaw_range:
+      min: -3.14
+      max: 3.14
+    # pitch范围
+    pitch_range:
+      min: -0.52
+      max: 0.72
