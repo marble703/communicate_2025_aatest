@@ -1,6 +1,7 @@
 #pragma once
 
 #include <atomic>
+#include <deque>
 #include <functional>
 #include <mutex>
 #include <rclcpp/rclcpp.hpp>
@@ -53,10 +54,7 @@ private:
      */
     void publish_autoaim();
 
-    std::map<int, double> cal_angle(Target_config config);
-
-    std::map<int, double> cal_angle();
-
+    void cal_angle();
 
     rclcpp::Publisher<communicate_2025_aatest::msg::Autoaim>::SharedPtr autoaim_pub_;
     int send_count_ = 0;
@@ -70,10 +68,9 @@ private:
 
     std::atomic<double> pitch_;
     std::atomic<double> yaw_;
-    
 
-    std::vector<double> pitch_history_;
-    std::vector<double> yaw_history_;
+    std::deque<double> pitch_history_;
+    std::deque<double> yaw_history_;
 
     double publish_rate_ = 3.0;
 

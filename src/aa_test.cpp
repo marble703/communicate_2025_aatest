@@ -27,8 +27,10 @@ AA_Test::~AA_Test() {
     RCLCPP_INFO(this->get_logger(), "AA_Test node stopped");
 }
 
+
 void AA_Test::publish_autoaim() {
     send_count_++;
+    cal_angle();
     autoaim_msg_ = std::make_shared<communicate_2025_aatest::msg::Autoaim>();
     autoaim_msg_->pitch = this->pitch_;
     autoaim_msg_->high_gimbal_yaw = this->yaw_;
@@ -42,12 +44,8 @@ void AA_Test::publish_autoaim() {
     );
 }
 
-std::map<int, double> AA_Test::cal_angle() {}
-
-void AA_Test::set(Target_config config) {
-    // config.wave = SQUAREWAVE;
-    // 计算目标值
-
+void AA_Test::cal_angle() {
+    Target_config config = this->config_;
     double time = this->send_count_ * this->publish_rate_;
     std::cout << "time: " << time << std::endl;
 
@@ -61,9 +59,11 @@ void AA_Test::set(Target_config config) {
             double amplitude = config.amplitude;
             double offset = config.offset;
             double phase = config.phase;
-            if (time + phase / period < period / 2) {
+            if (fmod(time + phase, period) < period / 2) {
+                std::cout << "SQUAREWAVE_HIGH" << std::endl;
                 return offset + amplitude;
             } else {
+                std::cout << "SQUAREWAVE_LOW" << std::endl;
                 return offset - amplitude;
             }
         };
@@ -73,7 +73,7 @@ void AA_Test::set(Target_config config) {
             double amplitude = config.amplitude;
             double offset = config.offset;
 
-            return offset + amplitude * (time / period);
+            return offset + amplitude * (fmod(time, period) / period);
         };
     } else if (config.wave == SINEWAVE) {
         config.wave_func = [time, config]() {
@@ -81,7 +81,7 @@ void AA_Test::set(Target_config config) {
             double amplitude = config.amplitude;
             double offset = config.offset;
 
-            return offset + amplitude * sin(2 * M_PI * time / period);
+            return offset + amplitude * sin(2 * M_PI * fmod(time, period) / period);
         };
     } else if (config.wave == TRIANGLEWAVE) {
         config.wave_func = [time, config]() {
@@ -97,28 +97,29 @@ void AA_Test::set(Target_config config) {
         temp = config.wave_func();
     }
 
-    // 处理范围
-    if (config.target == AUTOAIM_PITCH) {
-        if (max_pitch_ != -1 && temp > this->max_pitch_) {
-            temp = this->max_pitch_;
-            RCLCPP_WARN(this->get_logger(), "Pitch exceeds max limit: %f", this->max_pitch_);
-        } else if (min_pitch_ != -1 && temp < this->min_pitch_) {
-            temp = this->min_pitch_;
-            RCLCPP_WARN(this->get_logger(), "Pitch exceeds min limit: %f", this->min_pitch_);
+    // 处理角度范围
+    if (config.target == AUTOAIM_PITCH || config.target == AUTOAIM_YAW) {
+        temp = fmod(temp + M_PI, 2 * M_PI);
+        if (temp < 0) {
+            temp += 2 * M_PI;
         }
+        temp -= M_PI;
+    }
+
+    if (config.target == AUTOAIM_PITCH) {
         this->pitch_.store(temp);
     } else if (config.target == AUTOAIM_YAW) {
-        if (max_yaw_ != -1 && temp > this->max_yaw_) {
-            temp = this->max_yaw_;
-            RCLCPP_WARN(this->get_logger(), "Yaw exceeds max limit: %f", this->max_yaw_);
-        } else if (min_yaw_ != -1 && temp < this->min_yaw_) {
-            temp = this->min_yaw_;
-            RCLCPP_WARN(this->get_logger(), "Yaw exceeds min limit: %f", this->max_yaw_);
-        }
-
         this->yaw_.store(temp);
     } else {
         RCLCPP_ERROR(this->get_logger(), "Invalid target: %d", config.target);
     }
+    return;
+}
+
+void AA_Test::set(Target_config config) {
+    // config.wave = SQUAREWAVE;
+    // 计算目标值
+
+    this->config_ = config;
     return;
 }
