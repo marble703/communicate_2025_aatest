@@ -18,6 +18,8 @@ enum {
     SAWTOOTH,     // 锯齿波
     SINEWAVE,     // 正弦波
     TRIANGLEWAVE, // 三角波
+    RANDOM,       // 随机波
+    SINEWAVES     // 多正弦波叠加
 };
 
 struct Target_config {
@@ -79,4 +81,8 @@ private:
 
     double max_yaw_ = -1;
     double min_yaw_ = -1;
+
+    double rand_seed1;
+    double rand_seed2;
+    double rand_seed3;
 };

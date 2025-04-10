@@ -21,12 +21,15 @@ AA_Test::AA_Test(std::string node_name): Node(node_name) {
         std::chrono::milliseconds(3),
         std::bind(&AA_Test::publish_autoaim, this)
     );
+
+    this->rand_seed1 = (double)rand() / RAND_MAX;
+    this->rand_seed2 = (double)rand() / RAND_MAX;
+    this->rand_seed3 = (double)rand() / RAND_MAX;
 }
 
 AA_Test::~AA_Test() {
     RCLCPP_INFO(this->get_logger(), "AA_Test node stopped");
 }
-
 
 void AA_Test::publish_autoaim() {
     send_count_++;
@@ -60,10 +63,8 @@ void AA_Test::cal_angle() {
             double offset = config.offset;
             double phase = config.phase;
             if (fmod(time + phase, period) < period / 2) {
-                std::cout << "SQUAREWAVE_HIGH" << std::endl;
                 return offset + amplitude;
             } else {
-                std::cout << "SQUAREWAVE_LOW" << std::endl;
                 return offset - amplitude;
             }
         };
@@ -91,6 +92,64 @@ void AA_Test::cal_angle() {
 
             return offset + amplitude * (1 - fabs(fmod(time / period + 0.5, 1) - 0.5) * 4);
         };
+    }
+
+    else if (config.wave == RANDOM)
+    {
+        config.wave_func = [this, config]() {
+            double amplitude = config.amplitude;
+
+            double rand_value = ((double)rand() / RAND_MAX) * 2 - 1; // 生成[-1, 1]之间的随机数
+
+            double last_data =
+                (config.target == AUTOAIM_PITCH) ? this->pitch_.load() : this->yaw_.load();
+
+            if (config.period == 0) {
+                return last_data;
+            }
+
+            if (this->send_count_ % int(config.period / 10) == 0) {
+                return amplitude * rand_value + last_data;
+
+            } else {
+                return last_data;
+            }
+
+            return amplitude * rand_value + last_data;
+        };
+    } else if (config.wave == SINEWAVES) {
+        config.wave_func = [this, config]() {
+            double amplitude = config.amplitude;
+            double offset = config.offset;
+            double phase = config.phase;
+
+            double sin1 = offset
+                + amplitude * 3
+                    * sin(
+                        2 * M_PI * fmod(this->send_count_, config.period) / config.period
+                            * this->rand_seed1
+                        + phase
+                    );
+            double sin2 = offset
+                + amplitude * 6
+                    * sin(
+                        1 * M_PI * fmod(this->send_count_, config.period) / config.period
+                            * this->rand_seed2
+                        + phase
+                    );
+            double sin3 = offset
+                + amplitude * 2
+                    * sin(
+                        3 * M_PI * fmod(this->send_count_, config.period) / config.period
+                            * this->rand_seed3
+                        + phase
+                    );
+
+            return (sin1 + sin2 + sin3) / 11;
+        };
+    } else {
+        RCLCPP_ERROR(this->get_logger(), "Invalid wave type: %d", config.wave);
+        return;
     }
 
     if (config.wave != NONE) {

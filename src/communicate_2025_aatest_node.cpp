@@ -59,9 +59,9 @@ int main(int argc, char** argv) {
 
     createBarwithWindow("Autoaim_control", "target", &target, 1);
     createBaronWindow("Autoaim_control", "value", &value, 628);
-    createBaronWindow("Autoaim_control", "wave", &wave, TRIANGLEWAVE);
+    createBaronWindow("Autoaim_control", "wave", &wave, SINEWAVES);
     createBaronWindow("Autoaim_control", "period", &period, 100);
-    createBaronWindow("Autoaim_control", "amplitude", &amplitude, 314);
+    createBaronWindow("Autoaim_control", "amplitude", &amplitude, 628);
     createBaronWindow("Autoaim_control", "offset", &offset, 628);
     createBaronWindow("Autoaim_control", "phase", &phase, 628);
     // createBaronWindow("Autoaim_control", "max", &max, 180);
