@@ -33,6 +33,8 @@ struct Target_config {
     double max;                        // 最大值
     double min;                        // 最小值
     std::function<double()> wave_func; // 波形生成函数
+    int noise_enable;                  // 噪声是否启动
+    double noise_amplitude;            // 噪声强度
 };
 
 class AA_Test: public rclcpp::Node {

@@ -47,13 +47,15 @@ int main(int argc, char** argv) {
 
     // 初始化参数，使用opencv滑块
     Target_config config;
-    int target = AUTOAIM_YAW;   // 目标
-    int value = 314;              // 设定固定值,从0到628映射到-3.14到3.14
-    int wave = NONE;            // 波形
-    int period = 10;            // 周期，单位100ms
-    int amplitude = 45;         // 振幅，单位0.01
-    int offset = 314;             // 振幅偏移量，从0到628到100映射到-3.14到3.14
-    int phase = 0;              // 相位，从0到628到100映射到-3.14到3.14
+    int target = AUTOAIM_YAW;  // 目标
+    int value = 314;           // 设定固定值,从0到628映射到-3.14到3.14
+    int wave = NONE;           // 波形
+    int period = 10;           // 周期，单位100ms
+    int amplitude = 45;        // 振幅，单位0.01
+    int offset = 314;          // 振幅偏移量，从0到628到100映射到-3.14到3.14
+    int phase = 0;             // 相位，从0到628到100映射到-3.14到3.14
+    int noise_enable = 0;      // 噪声是否启动
+    int noise_amplitude = 314; // 噪声强度
     // int max = 45 / 180 / 3.14;  // 最大值，从0到100映射到-3.14到3.14
     // int min = -15 / 180 / 3.14; // 最小值，从0到100映射到-3.14到3.14
 
@@ -64,6 +66,9 @@ int main(int argc, char** argv) {
     createBaronWindow("Autoaim_control", "amplitude", &amplitude, 628);
     createBaronWindow("Autoaim_control", "offset", &offset, 628);
     createBaronWindow("Autoaim_control", "phase", &phase, 628);
+    createBaronWindow("Autoaim_control", "noise_enable", &noise_enable, 1);
+    createBaronWindow("Autoaim_control", "noise_enable", &noise_amplitude, 314);
+
     // createBaronWindow("Autoaim_control", "max", &max, 180);
     // createBaronWindow("Autoaim_control", "min", &min, 180);
 
@@ -76,8 +81,10 @@ int main(int argc, char** argv) {
             config.wave = wave;
             config.period = period * 100.0;
             config.amplitude = amplitude / 100.0;
-            config.offset = offset / 100.0  - 3.14;
+            config.offset = offset / 100.0 - 3.14;
             config.phase = phase / 100.0 - 3.14;
+            config.noise_enable = noise_enable;
+            config.noise_amplitude = noise_amplitude / 100.0;
             // config.max = max / 100.0 * 3.14 - 3.14;
             // config.min = min / 100.0 * 3.14 - 3.14;
             node->set(config);

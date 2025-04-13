@@ -156,6 +156,11 @@ void AA_Test::cal_angle() {
         temp = config.wave_func();
     }
 
+    if(config.noise_enable) {
+        double noise = ((double)rand() / RAND_MAX) * 2 - 1; // 生成[-1, 1]之间的随机数
+        temp += config.noise_amplitude * noise;
+    }
+
     // 处理角度范围
     if (config.target == AUTOAIM_PITCH || config.target == AUTOAIM_YAW) {
         temp = fmod(temp + M_PI, 2 * M_PI);
