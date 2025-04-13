@@ -1,5 +1,4 @@
 #include "aa_test.hpp"
-#include <iostream>
 
 AA_Test::AA_Test(std::string node_name): Node(node_name) {
     RCLCPP_INFO(this->get_logger(), "AA_Test node started");
@@ -12,7 +11,6 @@ AA_Test::AA_Test(std::string node_name): Node(node_name) {
     this->min_yaw_ = this->declare_parameter("yaw_range/min", -3.0);
 
     autoaim_pub_ = this->create_publisher<communicate_2025_aatest::msg::Autoaim>("shoot_info", 10);
-
     this->pitch_ = 0.0;
     this->yaw_ = 0.0;
 
@@ -21,6 +19,8 @@ AA_Test::AA_Test(std::string node_name): Node(node_name) {
         std::chrono::milliseconds(3),
         std::bind(&AA_Test::publish_autoaim, this)
     );
+
+    autoaim_pub2_ = this->create_publisher<std_msgs::msg::Float32>("shoot_info2", 10);
 
     this->rand_seed1 = (double)rand() / RAND_MAX;
     this->rand_seed2 = (double)rand() / RAND_MAX;
@@ -38,6 +38,10 @@ void AA_Test::publish_autoaim() {
     autoaim_msg_->pitch = this->pitch_;
     autoaim_msg_->high_gimbal_yaw = this->yaw_;
     autoaim_pub_->publish(*autoaim_msg_);
+
+    autoaim_msg2_ = std::make_shared<std_msgs::msg::Float32>();
+    autoaim_msg2_->data = this->pitch_;
+    autoaim_pub2_->publish(*autoaim_msg2_);
 
     RCLCPP_INFO(
         this->get_logger(),

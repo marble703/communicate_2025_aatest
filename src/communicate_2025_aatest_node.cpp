@@ -47,15 +47,15 @@ int main(int argc, char** argv) {
 
     // 初始化参数，使用opencv滑块
     Target_config config;
-    int target = AUTOAIM_YAW;  // 目标
-    int value = 314;           // 设定固定值,从0到628映射到-3.14到3.14
-    int wave = NONE;           // 波形
-    int period = 10;           // 周期，单位100ms
-    int amplitude = 45;        // 振幅，单位0.01
-    int offset = 314;          // 振幅偏移量，从0到628到100映射到-3.14到3.14
-    int phase = 0;             // 相位，从0到628到100映射到-3.14到3.14
-    int noise_enable = 0;      // 噪声是否启动
-    int noise_amplitude = 314; // 噪声强度
+    int target = AUTOAIM_YAW; // 目标
+    int value = 314;          // 设定固定值,从0到628映射到-3.14到3.14
+    int wave = NONE;          // 波形
+    int period = 10;          // 周期，单位100ms
+    int amplitude = 45;       // 振幅，单位0.01
+    int offset = 314;         // 振幅偏移量，从0到628到100映射到-3.14到3.14
+    int phase = 0;            // 相位，从0到628到100映射到-3.14到3.14
+    int noise_enable = 0;     // 噪声是否启动
+    int noise_amplitude = 1;  // 噪声强度
     // int max = 45 / 180 / 3.14;  // 最大值，从0到100映射到-3.14到3.14
     // int min = -15 / 180 / 3.14; // 最小值，从0到100映射到-3.14到3.14
 

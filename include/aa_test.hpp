@@ -7,6 +7,7 @@
 #include <rclcpp/rclcpp.hpp>
 
 #include "communicate_2025_aatest/msg/autoaim.hpp"
+#include "std_msgs/msg/float32.hpp"
 
 // 目标
 enum { AUTOAIM_YAW = 0, AUTOAIM_PITCH };
@@ -61,12 +62,11 @@ private:
     void cal_angle();
 
     rclcpp::Publisher<communicate_2025_aatest::msg::Autoaim>::SharedPtr autoaim_pub_;
+    rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr autoaim_pub2_;
     int send_count_ = 0;
     rclcpp::TimerBase::SharedPtr timer_;
     std::shared_ptr<communicate_2025_aatest::msg::Autoaim> autoaim_msg_;
-
-    // double pitch_;
-    // double yaw_;
+    std::shared_ptr<std_msgs::msg::Float32> autoaim_msg2_;
 
     Target_config config_;
 
