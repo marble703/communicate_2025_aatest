@@ -1,0 +1,3 @@
+[submodule "src/communicate_2025"]
+	path = src/communicate_2025
+	url = https://github.com/HDU-PHOENIX/communicate_2025.git

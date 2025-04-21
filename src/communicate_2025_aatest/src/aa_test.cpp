@@ -10,7 +10,7 @@ AA_Test::AA_Test(std::string node_name): Node(node_name) {
     this->max_yaw_ = this->declare_parameter("yaw_range/max", 3.0);
     this->min_yaw_ = this->declare_parameter("yaw_range/min", -3.0);
 
-    autoaim_pub_ = this->create_publisher<communicate_2025_aatest::msg::Autoaim>("shoot_info", 10);
+    autoaim_pub_ = this->create_publisher<communicate_2025::msg::Autoaim>("shoot_info", 10);
     this->pitch_ = 0.0;
     this->yaw_ = 0.0;
 
@@ -34,7 +34,7 @@ AA_Test::~AA_Test() {
 void AA_Test::publish_autoaim() {
     send_count_++;
     cal_angle();
-    autoaim_msg_ = std::make_shared<communicate_2025_aatest::msg::Autoaim>();
+    autoaim_msg_ = std::make_shared<communicate_2025::msg::Autoaim>();
     autoaim_msg_->pitch = this->pitch_;
     autoaim_msg_->high_gimbal_yaw = this->yaw_;
     autoaim_pub_->publish(*autoaim_msg_);

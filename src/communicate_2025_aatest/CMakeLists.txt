@@ -11,22 +11,20 @@ endif()
 
 find_package(ament_cmake_auto REQUIRED)
 
-find_package(rosidl_default_generators REQUIRED)
+# find_package(rosidl_default_generators REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
 
+include_directories(
+    ${OpenCV_INCLUDE_DIRS}
+)
+
 ament_auto_find_build_dependencies()
 
-rosidl_generate_interfaces(${PROJECT_NAME}
-    "msg/Autoaim.msg"
-    DEPENDENCIES
-    std_msgs
+ament_auto_add_library(${PROJECT_NAME} SHARED
+    DIRECTORY src
 )
 
-rosidl_get_typesupport_target(
-    cpp_typesupport_target
-    ${PROJECT_NAME} rosidl_typesupport_cpp
-)
 ament_auto_add_executable(${PROJECT_NAME}_node
     DIRECTORY src
 )
