@@ -40,3 +40,4 @@ done
 # 获取并杀死相关进程
 pid1=$(ps x | grep "communicate_2025" | grep -v grep | awk '{print $1}')
 pid2=$(ps x | grep "communicate_2025_aatest" | grep -v grep | awk '{print $1}')
+kill $pid1 $pid2
