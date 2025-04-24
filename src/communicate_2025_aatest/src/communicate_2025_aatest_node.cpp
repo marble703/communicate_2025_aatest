@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
     createBaronWindow("Autoaim_control", "offset", &offset, 628);
     createBaronWindow("Autoaim_control", "phase", &phase, 628);
     createBaronWindow("Autoaim_control", "noise_enable", &noise_enable, 1);
-    createBaronWindow("Autoaim_control", "noise_enable", &noise_amplitude, 314);
+    createBaronWindow("Autoaim_control", "noise_amplitude", &noise_amplitude, 314);
 
     // createBaronWindow("Autoaim_control", "max", &max, 180);
     // createBaronWindow("Autoaim_control", "min", &min, 180);
