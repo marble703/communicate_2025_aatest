@@ -13,6 +13,7 @@ find_package(ament_cmake_auto REQUIRED)
 
 # find_package(rosidl_default_generators REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(communicate_2025 REQUIRED)
 find_package(OpenCV REQUIRED)
 
 include_directories(
